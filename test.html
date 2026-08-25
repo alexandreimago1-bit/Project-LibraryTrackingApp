@@ -1,12 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Defines the character encoding used by the document -->
     <meta charset="UTF-8">
+
+    <!-- Makes the page scale correctly on different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
 </head>
+
 <body>
+
+    <!--
+        LIBRARY DISPLAY
+
+        JavaScript uses this element as the container where
+        renderLibrary(library) inserts the books.
+
+        Current project flow:
+
+        library array
+            ↓
+        renderLibrary()
+            ↓
+        #library
+            ↓
+        Books appear on the page
+    -->
     <div id="library"></div>
+
+
+    <!--
+        ADD BOOK FORM CONTAINER
+
+        This div is simply a container around the form.
+
+        NOTE:
+        The id "addBookForm" is currently attached to the DIV,
+        not the <form> itself.
+
+        In our JavaScript, we want addBookForm to refer to
+        the actual <form> element because that is what fires
+        the "submit" event.
+
+        We can clean this up later. For now, understand the
+        difference between:
+
+            <div>  = container
+            <form> = actual form element
+    -->
+    <div id="addBookFormContainer">
+
+        <!--
+            HTML FORM
+
+            This is where the user provides the information
+            needed to create a new book.
+
+            Later, this same concept will exist in our
+            full-stack application, except instead of only
+            modifying a local JavaScript array, the submitted
+            data can eventually be sent to our backend API.
+        -->
+        <form id="addBookForm">
+
+            <!--
+                LABEL
+
+                "for" connects the label to the input whose
+                id matches it.
+
+                Clicking "Title:" can therefore focus the
+                corresponding input.
+            -->
+            <label for="book_title">Title: </label>
+
+            <!--
+                BOOK TITLE INPUT
+
+                id:
+                    Used to uniquely identify this HTML element.
+
+                name:
+                    IMPORTANT FOR FORMS.
+
+                    FormData uses the name to identify the
+                    submitted field.
+
+                    Example:
+
+                    name="book_title"
+                         ↓
+                    formData.get("book_title")
+                         ↓
+                    "The Hobbit"
+            -->
+            <input
+                type="text"
+                id="book_title"
+                name="book_title"
+            >
+
+
+            <!-- Author field -->
+            <label for="book_author">Author: </label>
+
+            <input
+                type="text"
+                id="book_author"
+                name="book_author"
+            >
+
+
+            <!--
+                PAGES INPUT
+
+                type="number" tells the browser that this input
+                is intended for numeric values.
+
+                IMPORTANT:
+
+                Even though this is type="number", when we
+                retrieve the submitted value through FormData,
+                we received:
+
+                    "310"
+
+                rather than:
+
+                    310
+
+                That's why we later used:
+
+                    parseInt(formData.get("book_pages"))
+
+                to convert the value into a JavaScript number.
+            -->
+            <label for="book_pages">Pages: </label>
+
+            <input
+                type="number"
+                id="book_pages"
+                name="book_pages"
+            >
+
+
+            <!--
+                SUBMIT BUTTON
+
+                type="submit" tells the browser:
+
+                "This button submits the form."
+
+                Clicking it triggers the form's "submit" event,
+                which our JavaScript listens for.
+            -->
+            <button type="submit">Submit</button>
+
+
+            <!--
+                RESET BUTTON
+
+                type="reset" resets the form's input fields
+                back to their initial values.
+
+                This does NOT remove books from the library.
+                It only resets the form fields.
+            -->
+            <button type="reset">Reset</button>
+
+        </form>
+    </div>
+
+
+    <!--
+        JAVASCRIPT
+
+        Loads our Library Tracker JavaScript.
+
+        The JavaScript handles:
+
+        - library state
+        - creating books
+        - adding books
+        - rendering books
+        - form submission
+        - user interactions
+    -->
     <script src="test.js"></script>
+
 </body>
 </html>
