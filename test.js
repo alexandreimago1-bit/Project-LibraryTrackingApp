@@ -18,26 +18,26 @@
 // instead of being permanently stored in this JS array.
 // ============================================================
 
-let library = [
-  {
-    title: "Three Men in a Boat",
-    author: "Jerome K. Jerome",
-    pages: 185,
-    status: "tbr"
-  },
-  {
-    title: "The Three Musketeers",
-    author: "Alexandre Dumas",
-    pages: 830,
-    status: "tbr"
-  },
-  {
-    title: "The Book of Three",
-    author: "Lloyd Alexander",
-    pages: 224,
-    status: "tbr"
-  }
-];
+// let library = [
+//   {
+//     title: "Three Men in a Boat",
+//     author: "Jerome K. Jerome",
+//     pages: 185,
+//     status: "tbr"
+//   },
+//   {
+//     title: "The Three Musketeers",
+//     author: "Alexandre Dumas",
+//     pages: 830,
+//     status: "tbr"
+//   },
+//   {
+//     title: "The Book of Three",
+//     author: "Lloyd Alexander",
+//     pages: 224,
+//     status: "tbr"
+//   }
+// ];
 
 
 // ============================================================
@@ -188,9 +188,9 @@ function addBook(library, book) {
 // develops.
 // ============================================================
 
-const newBook = createBook("Frankenstein", "Mary Shelley", 288);
+// const newBook = createBook("Frankenstein", "Mary Shelley", 288);
 
-library = addBook(library, newBook);
+// library = addBook(library, newBook);
 
 
 // ============================================================
@@ -479,3 +479,28 @@ addBookForm.addEventListener("submit", (event) => {
   renderLibrary(library);
 
 });
+
+// localStorage.setItem("library",JSON.stringify(library))
+// const savedLibrary = localStorage.getItem("library")
+// const loadedLibrary = JSON.parse(savedLibrary)
+
+// let bookTitles = loadedLibrary.map(book => book.title)
+// console.log(bookTitles);
+
+
+function saveLibrary(library){
+  localStorage.setItem("library",JSON.stringify(library))
+}
+
+function loadLibrary(){
+
+  let savedLibrary = localStorage.getItem("library")
+
+    if(savedLibrary == null){
+      return []
+    }
+    
+    let loadedLibrary = JSON.parse(savedLibrary)
+  return loadedLibrary
+}
+let library = loadLibrary()
