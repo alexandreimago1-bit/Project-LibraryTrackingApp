@@ -81,7 +81,7 @@ function startReading(library, title) {
 
     }
   });
-
+saveLibrary(updated)
   return updated;
 }
 
@@ -108,7 +108,7 @@ function finishedReading(library, title) {
 
     }
   });
-
+  saveLibrary(updated)
   return updated;
 }
 
@@ -124,6 +124,8 @@ function finishedReading(library, title) {
 function removeBook(library, title) {
 
   const updated = library.filter(book => book.title !== title);
+
+saveLibrary(updated)
 
   return updated;
 }
@@ -149,6 +151,7 @@ function removeBook(library, title) {
 function createBook(title, author, pages) {
 
   return {
+    id: crypto.randomUUID ,
     title: title,
     author: author,
     pages: pages,
@@ -170,7 +173,7 @@ function createBook(title, author, pages) {
 function addBook(library, book) {
 
   const newLib = [...library, book];
-
+  saveLibrary(newLib);
   return newLib;
 }
 
@@ -499,8 +502,35 @@ function loadLibrary(){
     if(savedLibrary == null){
       return []
     }
-    
-    let loadedLibrary = JSON.parse(savedLibrary)
-  return loadedLibrary
+    let loadedLibrary
+    try{
+       loadedLibrary = JSON.parse(savedLibrary)
+    }catch(error){
+      return []
+    }
+    const validStatuses = ['tbr','finished','reading']
+    if (Array.isArray(loadedLibrary)){
+      if(loadedLibrary.every(book => 
+        typeof book.title == "string" && typeof book.author == "string" && typeof book.pages == "number" && validStatuses.includes(book.status)
+      )){
+        return loadedLibrary
+      }else{
+        return []
+      }
+    }else{
+      return []
+    }
 }
 let library = loadLibrary()
+
+
+
+localStorage.setItem("library", JSON.stringify([
+  {
+    title: "Dune",
+    author: "Frank Herbert",
+    pages: 412,
+    status: "banana"
+  }
+]))
+  console.log(library)
