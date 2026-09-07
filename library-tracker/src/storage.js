@@ -1,9 +1,10 @@
-export function createBook(title, author, pages){
+export function createBook(title, author, pages, genre = ''){
     return {
         id: crypto.randomUUID(),
         title: title,
         author: author,
         pages: pages,
+        genre: genre,
         status: "tbr"
     };
 }
@@ -50,6 +51,7 @@ export function loadLibrary(){
         typeof book.title === "string" &&
         typeof book.author === "string" &&
         typeof book.pages === "number" &&
+        typeof book.genre === 'string' &&
         validStatuses.includes(book.status)
     );
     return isValid? loadedLibrary : [];

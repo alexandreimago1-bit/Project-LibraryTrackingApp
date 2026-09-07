@@ -1,0 +1,40 @@
+/* tokens.css */
+:root {
+  /* --- Color: core palette --- */
+  --color-mustard: #D9A441;
+  --color-terracotta: #C9704F;
+  --color-moss: #7A8B5F;
+
+  /* --- Color: neutrals (the "paper" feel) --- */
+  --color-cream: #FBF3E7;      
+  --color-cream-dark: #F0E4D0; 
+  --color-ink: #3E3229;       
+  --color-ink-soft: #7A6C5D; 
+
+  /* --- Color: semantic (status badges) --- */
+  --color-status-reading: var(--color-mustard);
+  --color-status-tbr: var(--color-moss);
+  --color-status-finished: var(--color-terracotta);
+
+  /* --- Radius: soft, hand-drawn, never sharp --- */
+  --radius-sm: 6px;   
+  --radius-md: 14px; 
+  --radius-lg: 24px; 
+
+  /* --- Shadow: warm-tinted, diffused, not harsh gray --- */
+  --shadow-sm: 0 1px 3px rgba(62, 50, 41, 0.12);
+  --shadow-md: 0 4px 10px rgba(62, 50, 41, 0.15);
+  --shadow-lg: 0 8px 24px rgba(62, 50, 41, 0.18);
+
+  /* --- Fonts --- */
+  --font-heading: 'Fredoka', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+
+
+
+
+  /* --- Icon badge (circle-with-icon pattern) --- */
+  --icon-badge-bg: var(--color-terracotta);
+  --icon-badge-size-sm: 40px;  
+  --icon-badge-size-lg: 88px; 
+}

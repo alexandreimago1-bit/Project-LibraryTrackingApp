@@ -1,54 +1,40 @@
-import { useState } from 'react'
-import { loadLibrary, startReading, finishedReading, removeBook, createBook, addBook } from './storage.js'
-import './App.css'
+import { useState, useEffect } from 'react'
+import { loadLibrary, startReading, finishedReading, removeBook,saveLibrary } from './storage.js'
+import Home from './pages/Home.jsx'
+import Library  from './pages/Library.jsx'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import RootLayout  from './layouts/RootLayout.jsx';
 
 function App(){
   const [library, setLibrary] = useState(loadLibrary)
-  const [formData, setFormData] = useState({title:"", author: "", pages: ""})
-const [showForm, setShowForm] = useState(false);
-  function handleChange(event){
-    setFormData({...formData,[event.target.name]: event.target.value})
-  }
+    useEffect(()=>{
+      saveLibrary(library);
+    },[library])
 
-  function handleSubmit(event){
-  event.preventDefault();
-  if (!formData.title.trim() || !formData.author.trim() || Number(formData.pages) <= 0){
-    return;
-  }
-  const newBook = createBook(formData.title, formData.author, Number(formData.pages))
-  setLibrary(addBook(library,newBook))
-  setFormData({ title: "", author: "", pages: ""})
-  setShowForm(false)
-}
 console.log(library)
-return(
+return( 
+<BrowserRouter>
   <div>
-    {showForm ? ( <form onSubmit={handleSubmit}>
-      <input type="text" name="title" value={formData.title} onChange={handleChange} />
-      <input type="text" name="author" value={formData.author} onChange={handleChange} />
-      <input type="number" name="pages" value={formData.pages} onChange={handleChange} />
-      <button type = "submit">Submit</button>
-    </form>) : null }
-    <button onClick={() => setShowForm(true)}>Add Book</button>
-    <div id="library">
-      {library.map(book => (
-        <div key={book.id}>
-          {book.title} - {book.author} - {book.pages} - {book.status}
-          <button onClick={() => {
-            if (book.status == 'tbr'){
-              setLibrary(startReading(library, book.id));
-            } else if (book.status == 'reading'){
-              setLibrary(finishedReading(library, book.id));
-            } else if (book.status == 'finished'){
-              setLibrary(startReading(library, book.id));
-            }
-          }}> {book.status == 'tbr' ? 'Start Reading': book.status == 'reading'? 'Finish':'Read Again' } </button>
-          <button onClick={() => { setLibrary(removeBook(library, book.id)) }}>Remove</button>
-        </div>
-      ))}
-    </div>
+<Routes>
+    <Route path='/' element = {<RootLayout library={library} setLibrary={setLibrary}/>}>
+      <Route index element={<Home/>} />
+      <Route path='library' element={<Library
+      setLibrary={setLibrary}
+      library={library} onRemove={(id) => 
+        setLibrary(removeBook(library,id))} 
+        onStartReading={(id) => 
+        setLibrary(startReading(library,id))} 
+        onFinishReading={(id) => 
+        setLibrary(finishedReading(library,id))} />} />
+    </Route>  
+</Routes>
+
   </div>
+</BrowserRouter>
 )
 
 }
 export default App
+
+
+
