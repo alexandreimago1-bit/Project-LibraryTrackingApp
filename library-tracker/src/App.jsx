@@ -1,40 +1,29 @@
-import { useState, useEffect } from 'react'
-import { loadLibrary, startReading, finishedReading, removeBook,saveLibrary } from './storage.js'
+import { useEffect, useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { finishedReading, loadLibrary, loadProfile, removeBook, saveLibrary, saveProfile, startReading } from './storage.js'
+import RootLayout from './layouts/RootLayout.jsx'
 import Home from './pages/Home.jsx'
-import Library  from './pages/Library.jsx'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import RootLayout  from './layouts/RootLayout.jsx';
+import Library from './pages/Library.jsx'
+import Cart from './pages/Cart.jsx'
+import ReadingDetails from './pages/ReadingDetails.jsx'
+import Profile from './pages/Profile.jsx'
+import LibraryOverview from './pages/LibraryOverview.jsx'
 
-function App(){
+function App() {
   const [library, setLibrary] = useState(loadLibrary)
-    useEffect(()=>{
-      saveLibrary(library);
-    },[library])
+  const [profile, setProfile] = useState(loadProfile)
+  useEffect(() => saveLibrary(library), [library])
+  useEffect(() => saveProfile(profile), [profile])
 
-console.log(library)
-return( 
-<BrowserRouter>
-  <div>
-<Routes>
-    <Route path='/' element = {<RootLayout library={library} setLibrary={setLibrary}/>}>
-      <Route index element={<Home/>} />
-      <Route path='library' element={<Library
-      setLibrary={setLibrary}
-      library={library} onRemove={(id) => 
-        setLibrary(removeBook(library,id))} 
-        onStartReading={(id) => 
-        setLibrary(startReading(library,id))} 
-        onFinishReading={(id) => 
-        setLibrary(finishedReading(library,id))} />} />
-    </Route>  
-</Routes>
-
-  </div>
-</BrowserRouter>
-)
-
+  return <BrowserRouter><Routes>
+    <Route path='/' element={<RootLayout library={library} setLibrary={setLibrary} profile={profile} setProfile={setProfile} />}>
+      <Route index element={<Home />} />
+      <Route path='library' element={<LibraryOverview />} />
+      <Route path='shelves' element={<Library library={library} setLibrary={setLibrary} onRemove={(id) => setLibrary(removeBook(library, id))} onStartReading={(id) => setLibrary(startReading(library, id))} onFinishReading={(id) => setLibrary(finishedReading(library, id))} />} />
+      <Route path='cart' element={<Cart library={library} setLibrary={setLibrary} />} />
+      <Route path='reading/:bookId' element={<ReadingDetails />} />
+      <Route path='profile' element={<Profile />} />
+    </Route>
+  </Routes></BrowserRouter>
 }
 export default App
-
-
-

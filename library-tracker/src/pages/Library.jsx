@@ -1,53 +1,20 @@
-import { useState } from 'react'
-import { createBook, addBook } from '../storage.js'
+import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { addBook, createBook, moveBook } from '../storage.js'
 import BookCard from '../components/BookCard.jsx'
+import '../styles/Library.css'
+
+const STATUSES = [{ key: 'tbr', label: 'To Be Read' }, { key: 'reading', label: 'Currently Reading' }, { key: 'finished', label: 'Finished Books' }]
+const blankForm = { title: '', author: '', pages: '', genre: '', status: 'tbr' }
 
 function Library({ library, onRemove, onStartReading, onFinishReading, setLibrary }) {
-  const [formData, setFormData] = useState({ title: "", author: "", pages: "", genre: "" })
-  const [showForm, setShowForm] = useState(false)
-
-  function handleChange(event) {
-    setFormData({ ...formData, [event.target.name]: event.target.value })
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault()
-    if (!formData.title.trim() || !formData.author.trim() || Number(formData.pages) <= 0) {
-      return
-    }
-    const newBook = createBook(formData.title, formData.author, Number(formData.pages), formData.genre)
-    setLibrary(addBook(library, newBook))
-    setFormData({ title: "", author: "", pages: "", genre: "" })
-    setShowForm(false)
-  }
-
-  return (
-    <div>
-      <h1>Library</h1>
-      {showForm ? (
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder='Name' />
-          <input type="text" name="author" value={formData.author} onChange={handleChange} placeholder='Author' />
-          <input type="number" name="pages" value={formData.pages} onChange={handleChange} placeholder='Page Number' />
-          <input type="text" name="genre" value={formData.genre} onChange={handleChange} placeholder='Genre' />
-          <button type="submit">Submit</button>
-        </form>
-      ) : null}
-      <button onClick={() => setShowForm(true)}>Add Book</button>
-      <div id="library">
-        {library.map(book => (
-          <div key={book.id}>
-            <BookCard
-              book={book}
-              onRemove={() => onRemove(book.id)}
-              onStartReading={() => onStartReading(book.id)}
-              onFinishReading={() => onFinishReading(book.id)}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  const [formData, setFormData] = useState(blankForm); const [showForm, setShowForm] = useState(false); const [sortBy, setSortBy] = useState('custom'); const [searchParams] = useSearchParams()
+  const selectedStatus = searchParams.get('status') || 'all'; const visibleStatuses = selectedStatus === 'all' ? STATUSES : STATUSES.filter((status) => status.key === selectedStatus)
+  const groupedBooks = useMemo(() => STATUSES.reduce((groups, status) => { const books = library.filter((book) => book.status === status.key); groups[status.key] = [...books].sort((a, b) => sortBy === 'title' ? a.title.localeCompare(b.title) : sortBy === 'author' ? a.author.localeCompare(b.author) : sortBy === 'genre' ? (a.genre || '').localeCompare(b.genre || '') : a.shelfOrder - b.shelfOrder); return groups }, {}), [library, sortBy])
+  function handleSubmit(event) { event.preventDefault(); if (!formData.title.trim() || !formData.author.trim() || Number(formData.pages) <= 0) return; setLibrary(addBook(library, createBook(formData.title, formData.author, Number(formData.pages), formData.genre, formData.status))); setFormData(blankForm); setShowForm(false) }
+  return <div className='library-page'><header className='library-header'><div><p className='eyebrow'>Your shelves</p><h1>{selectedStatus === 'all' ? 'Library' : visibleStatuses[0].label}</h1></div><div className='library-tools'><label className='select-wrap'>Sort <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}><option value='custom'>My shelf order</option><option value='title'>Title</option><option value='author'>Author</option><option value='genre'>Genre</option></select></label><button className='primary-button' onClick={() => setShowForm((shown) => !shown)}>{showForm ? 'Close' : '+ Add book'}</button></div></header>
+    {showForm && <form className='book-form' onSubmit={handleSubmit}><input required value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder='Book title' /><input required value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} placeholder='Author' /><input required min='1' type='number' value={formData.pages} onChange={(e) => setFormData({ ...formData, pages: e.target.value })} placeholder='Pages' /><input value={formData.genre} onChange={(e) => setFormData({ ...formData, genre: e.target.value })} placeholder='Genre' /><label className='form-select'>Shelf <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>{STATUSES.map((status) => <option key={status.key} value={status.key}>{status.label}</option>)}</select></label><button className='submit-button'>Save book</button></form>}
+    {visibleStatuses.map((status) => <section className='shelf-section' key={status.key}><div className='shelf-header'><h2>{status.label}</h2><span>{groupedBooks[status.key].length} books</span></div><div className='shelf'>{groupedBooks[status.key].length === 0 ? <div className='empty-shelf'>No books on this shelf yet.</div> : groupedBooks[status.key].map((book) => <BookCard key={book.id} book={book} onRemove={() => onRemove(book.id)} onStartReading={() => onStartReading(book.id)} onFinishReading={() => onFinishReading(book.id)} onMoveLeft={sortBy === 'custom' ? () => setLibrary(moveBook(library, book.id, -1)) : undefined} onMoveRight={sortBy === 'custom' ? () => setLibrary(moveBook(library, book.id, 1)) : undefined} />)}</div></section>)}
+  </div>
 }
-
 export default Library
