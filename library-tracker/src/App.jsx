@@ -15,7 +15,7 @@ function App() {
   useEffect(() => saveLibrary(library), [library])
   useEffect(() => saveProfile(profile), [profile])
 
-  return <BrowserRouter><Routes>
+  return <BrowserRouter basename="/Project-LibraryTrackingApp"><Routes>
     <Route path='/' element={<RootLayout library={library} setLibrary={setLibrary} profile={profile} setProfile={setProfile} />}>
       <Route index element={<Home />} />
       <Route path='library' element={<LibraryOverview />} />
