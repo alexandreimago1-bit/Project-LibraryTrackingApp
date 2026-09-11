@@ -62,7 +62,7 @@ export function loadLibrary() {
   } catch { return [] }
 }
 
-const DEFAULT_PROFILE = { name: 'Your name', age: '', favoriteGenre: '', favoriteBook: '', quote: 'A reader lives a thousand lives before they die.' }
+const DEFAULT_PROFILE = { name: 'Your name', age: '', favoriteGenre: '', favoriteBook: '', quote: 'A reader lives a thousand lives before they die.', photo: '' }
 export function loadProfile() {
   try {
     const savedProfile = JSON.parse(localStorage.getItem('library-profile'))
