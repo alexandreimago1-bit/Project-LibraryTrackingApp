@@ -30,11 +30,7 @@ export function updateBook(library, id, changes) {
 }
 
 export function startReading(library, id) {
-  return library.map((book) => {
-    if (book.id === id) return { ...book, status: 'reading' }
-    if (book.status === 'reading') return { ...book, status: 'tbr' }
-    return book
-  })
+  return library.map((book) => book.id === id ? { ...book, status: 'reading' } : book)
 }
 export function finishedReading(library, id) { return updateBook(library, id, { status: 'finished' }) }
 export function moveToTbr(library, id) { return updateBook(library, id, { status: 'tbr', boughtAt: new Date().toISOString() }) }
