@@ -1,0 +1,16 @@
+.auth-page { display: grid; min-height: 100vh; place-items: center; padding: 1.5rem; background: var(--bg); }
+.auth-panel { width: min(100%, 440px); padding: 2.5rem; border: 1px solid var(--line); background: var(--paper); box-shadow: 12px 12px 0 rgba(201,112,79,.12); }
+.auth-panel h1 { margin: .25rem 0 .75rem; font-size: clamp(2rem, 6vw, 3.5rem); line-height: .95; }
+.auth-panel > p:not(.eyebrow) { color: var(--ink-soft); line-height: 1.6; }
+.auth-form { display: grid; gap: 1rem; margin-top: 1.75rem; }
+.auth-form label { display: grid; gap: .4rem; color: var(--ink-soft); font-size: .85rem; font-weight: 800; }
+.auth-form input { width: 100%; padding: .8rem; border: 1px solid var(--line); background: #fffaf2; color: var(--ink); }
+.auth-form button:disabled { cursor: wait; opacity: .65; }
+.auth-message { margin: 1rem 0 0; color: var(--terracotta); font-size: .9rem; }
+.auth-toggle { margin-top: 1.25rem; padding: 0; border: 0; background: transparent; color: var(--terracotta); cursor: pointer; font-weight: 800; }
+.privacy-consent { color: var(--ink-soft); font-size: .8rem; line-height: 1.5; }
+.privacy-consent details { margin-bottom: .75rem; }
+.privacy-consent summary { color: var(--terracotta); cursor: pointer; font-weight: 800; }
+.privacy-consent p { margin: .6rem 0 0; }
+.consent-label { display: flex !important; grid-template-columns: auto 1fr; grid-template-rows: auto; align-items: flex-start; gap: .5rem !important; color: var(--ink) !important; font-size: .8rem !important; }
+.consent-label input { width: auto; margin-top: .25rem; }

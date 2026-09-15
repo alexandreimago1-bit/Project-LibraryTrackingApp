@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import '../styles/rootlayout.css'
 
-function RootLayout({ library, setLibrary, profile, setProfile }) {
+function RootLayout({ library, setLibrary, profile, setProfile, onSignOut, onAddBook, onUpdateBook, onRemoveBook, onMoveBook, onAddNote, onDeleteNote, onSaveProfile }) {
   const [libraryMenuOpen, setLibraryMenuOpen] = useState(false)
 
   return <div className='root-layout'>
@@ -30,9 +30,10 @@ function RootLayout({ library, setLibrary, profile, setProfile }) {
             </div>
           )}
         </div>
+        <button className='nav-button sign-out-button' onClick={onSignOut}>Log out</button>
       </nav>
     </aside>
-    <div className='page-content'><Outlet context={{ library, setLibrary, profile, setProfile }} /></div>
+    <div className='page-content'><Outlet context={{ library, setLibrary, profile, setProfile, onAddBook, onUpdateBook, onRemoveBook, onMoveBook, onAddNote, onDeleteNote, onSaveProfile }} /></div>
   </div>
 }
 export default RootLayout

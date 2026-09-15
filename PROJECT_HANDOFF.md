@@ -19,14 +19,16 @@ The long-term goal is a full-stack version with a React frontend, backend API, d
 
 ## Verified Current Project State
 
-The project is in the functional React frontend MVP phase.
+The project is in the authenticated Supabase-backed React MVP phase.
 
 - The Vite React app is in `library-tracker/`.
 - `npm run build` completes successfully.
 - `npm run lint` completes successfully.
-- `App.jsx` owns shared `library` and `profile` state.
-- `useState(loadLibrary)` and `useState(loadProfile)` load saved data from localStorage when the app starts.
-- `useEffect` saves library and profile changes back to localStorage.
+- `App.jsx` owns shared `library` and `profile` state and loads them for the authenticated user.
+- Supabase Auth handles email/password sign-up, email confirmation, login sessions, and logout.
+- `src/lib/libraryApi.js` owns Supabase reads and writes for books, notes, and profiles.
+- `.env.local` provides the Supabase URL and publishable key locally and is ignored by Git.
+- The database schema is in `supabase/schema.sql` and uses Row Level Security for user-owned data.
 - React Router is installed and functioning with a shared `RootLayout`.
 - `RootLayout.jsx` owns navigation and passes shared data through `<Outlet context={...} />`.
 - `rootlayout.css` implements a responsive two-column desktop layout with a horizontal navigation layout on small screens.
@@ -66,6 +68,18 @@ Storage utilities currently include:
 - `loadLibrary`
 - `saveProfile`
 - `loadProfile`
+
+Remote data utilities in `src/lib/libraryApi.js` include:
+
+- `fetchLibrary`
+- `createBook`
+- `updateBook`
+- `deleteBook`
+- `updateBookOrder`
+- `addNote`
+- `deleteNote`
+- `fetchProfile`
+- `saveProfile`
 
 ### Routes
 
@@ -141,14 +155,18 @@ Routes are declared in `src/App.jsx`:
 - Profile photo
 - Favourite quote
 
-Profile data is persisted in localStorage separately from the library.
+Profile data is persisted in the Supabase `profiles` table for the signed-in user.
+
+### Authentication and backend
+
+`Auth.jsx` provides email/password sign-up and login. `App.jsx` listens for Supabase auth-session changes and blocks the application routes until a user is authenticated. The Supabase database contains `profiles`, `books`, and `notes` tables with policies that restrict access to the current user.
 
 ## React Concepts Currently in Use
 
 - Shared state lifted into `App.jsx`.
 - Derived values calculated during render from current state.
 - `useState` for library, profile, forms, menus, and notes.
-- `useEffect` for localStorage persistence.
+- `useEffect` for authentication sessions and initial remote data loading.
 - Controlled form inputs.
 - Reusable components with props and callback handlers.
 - React Router nested routes and dynamic route parameters.
@@ -159,21 +177,22 @@ Profile data is persisted in localStorage separately from the library.
 ## Known Gaps and Risks
 
 - There are no automated component or end-to-end tests yet.
-- Data is stored only in the current browser's localStorage; there is no backend or account sync.
+- The frontend talks directly to Supabase; there is no custom Node/Express API.
+- Existing localStorage data is not automatically migrated into Supabase.
 - Reading progress, a reading timer, and richer book details are not implemented.
 - Book form validation is intentionally basic and mostly relies on required fields and positive page counts.
 - The app needs more responsive and accessibility testing across real browser sizes.
 - The original `TEST_HTML&JS/` files are retained as the earlier vanilla JavaScript experiment; the active app is `library-tracker/`.
-- Backend, database, authentication, and deployment are future work.
+- Production deployment and environment variables for the hosted frontend are still future work.
 
 ## Recommended Next Priorities
 
-1. Add focused tests for storage utilities and the main book-status flows.
-2. Improve form validation and user feedback for invalid or destructive actions.
-3. Review mobile layouts and keyboard/accessibility behavior.
-4. Expand reading details with progress tracking or a reading timer.
-5. Decide which data model should remain local-only before designing a backend API.
-6. Add the backend, database, authentication, and deployment after the frontend behavior is stable.
+1. Test every authenticated CRUD flow against the Supabase project.
+2. Add focused component and end-to-end tests.
+3. Improve form validation and user feedback for invalid or failed actions.
+4. Review mobile layouts and keyboard/accessibility behavior.
+5. Add reading progress or a reading timer.
+6. Deploy the frontend with protected environment variables and document Supabase monitoring.
 
 ## Working Style
 

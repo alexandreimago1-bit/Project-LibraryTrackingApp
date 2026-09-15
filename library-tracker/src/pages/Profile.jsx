@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
 import '../styles/Profile.css'
 function Profile() {
-  const { profile, setProfile } = useOutletContext(); const [draft, setDraft] = useState(profile); const [saved, setSaved] = useState(false)
-  function submit(event) { event.preventDefault(); setProfile(draft); setSaved(true) }
+  const { profile, onSaveProfile } = useOutletContext(); const [draft, setDraft] = useState(profile); const [saved, setSaved] = useState(false)
+  function submit(event) { event.preventDefault(); onSaveProfile(draft); setSaved(true) }
   function removePhoto() { setDraft({ ...draft, photo: '' }) }
   function choosePhoto(event) {
     const file = event.target.files?.[0]
