@@ -6,3 +6,4 @@
 .book-shell { min-height: clamp(220px, 30vh, 300px); }
 @media (max-width: 720px) { .home-grid { grid-template-rows: auto auto auto; height: auto; }.reading-book { overflow: visible; }.reading-books { grid-template-columns: 1fr; }.book-shell { min-height: 240px; } }
 .library-card-identity { display: flex; flex-direction: column; align-items: center; gap: .9rem; margin: 1.6rem 0; text-align: center; }.library-card-photo, .library-card-placeholder { width: 64px; height: 64px; flex: 0 0 64px; border-radius: 50%; }.library-card-photo { border: 2px solid var(--line); object-fit: cover; }.library-card-placeholder { display: grid; place-items: center; background: var(--moss); color: #fffaf1; font: 400 1.8rem Georgia,serif; }.library-card-identity h2 { margin: 0; }
+.library-card { align-self: start; }
